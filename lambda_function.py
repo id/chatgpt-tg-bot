@@ -22,16 +22,18 @@ def generate_response(prompt):
 def lambda_handler(event, context):
     try:
         message = json.loads(event['body'])['message']
+        chat_id = message['chat']['id']
         user_id = int(message['from']['id'])
+        text = message['text']
         if user_id not in tg_user_ids:
+            print(f"Received message from unathorized user {user_id}: {text}")
             return {
                 'statusCode': 200,
                 'body': json.dumps('Not allowed')
             }
-        chat_id = message['chat']['id']
-        text = message['text']
-        print(f"Received message from {chat_id}: {message}")
+        print(f"Received message from {user_id}: {text}")
         response = generate_response(text)
+        print(f"Response from openai: {response}")
         bot.send_message(chat_id, response)
 
     except Exception as e:
