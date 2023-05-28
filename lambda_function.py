@@ -40,6 +40,7 @@ def lambda_handler(event, context):
 
     if user_id not in tg_user_ids:
         print(f"Received message from unathorized user {user_id}: {prompt}")
+        response = "You are not authorized to use this bot."
         bot.send_message(chat_id, response)
         return
 
